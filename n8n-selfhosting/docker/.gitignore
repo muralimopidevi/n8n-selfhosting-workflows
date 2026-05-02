@@ -1,0 +1,39 @@
+# Environment files with secrets
+.env
+.env.local
+.env.*.local
+
+# Docker volumes and data
+volumes/
+data/
+postgres_data/
+redis_data/
+n8n_data/
+
+# Logs
+*.log
+logs/
+
+# Backups
+backup/
+*.sql
+*.sql.gz
+*.tar.gz
+*.backup
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+tmp/
+temp/
+*.tmp
