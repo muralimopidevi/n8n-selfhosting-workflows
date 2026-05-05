@@ -1,9 +1,41 @@
 # Environment variables
 .env
 **/.env
+.env.local
+.env.*.local
 
-info
+# Internal documentation (private project context)
 info/
+info/**
 
+# IDE specific
 .vscode/
 .idea/
+*.swp
+*.swo
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.log
+
+# Node modules (if any)
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Private agent configurations (if any local overrides)
+.github/agents/local/
+.github/agents/*.local.md
+
+# Test files
+*.test.js
+test/
+coverage/
+.github
+.github/
