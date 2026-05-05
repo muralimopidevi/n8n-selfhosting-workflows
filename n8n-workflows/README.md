@@ -18,7 +18,7 @@
 
 Generate professional infographics and images using Google Gemini's AI:
 
-#### 1. [Basic Text-to-Image](basic-text-to-image/)
+#### 1. [Basic Text-to-Image](image-generation/basic-text-to-image/)
 **Simplest workflow** - Text prompt → Image
 
 - ⚡ 4 nodes, easiest setup
@@ -26,11 +26,11 @@ Generate professional infographics and images using Google Gemini's AI:
 - 🎯 Perfect for testing and learning
 - ⏱️ ~10 seconds per image
 
-👉 **[Start Here →](basic-text-to-image/README.md)**
+👉 **[Start Here →](image-generation/basic-text-to-image/README.md)**
 
 ---
 
-#### 2. [Web Search + Image Generation](web-search-image-generation/)
+#### 2. [Web Search + Image Generation](image-generation/web-search-image-generation/)
 **Research-powered** - Web search → Enriched prompt → Image
 
 - 🔍 Firecrawl web research
@@ -38,11 +38,11 @@ Generate professional infographics and images using Google Gemini's AI:
 - 🎯 Best for current topics and accurate data
 - ⏱️ ~15-25 seconds per image
 
-👉 **[Explore →](web-search-image-generation/README.md)**
+👉 **[Explore →](image-generation/web-search-image-generation/README.md)**
 
 ---
 
-#### 3. [Enhanced Prompt Engineering + Image Generation](enhanced-prompt-image-generation/)
+#### 3. [Enhanced Prompt Engineering + Image Generation](image-generation/enhanced-prompt-image-generation/)
 **Most advanced** - AI analyzes content → Auto-selects style → Professional infographic
 
 - 🧠 AI prompt optimization with LangChain
@@ -51,7 +51,7 @@ Generate professional infographics and images using Google Gemini's AI:
 - 🏆 Production-quality output
 - ⏱️ ~20-40 seconds per image
 
-👉 **[View Advanced →](enhanced-prompt-image-generation/README.md)**
+👉 **[View Advanced →](image-generation/enhanced-prompt-image-generation/README.md)**
 
 ---
 
@@ -76,12 +76,12 @@ Generate professional infographics and images using Google Gemini's AI:
 
 | Use Case | Recommended Workflow | Why? |
 |----------|---------------------|------|
-| **Testing/Learning** | [Basic](basic-text-to-image/) | Simple setup, immediate results |
-| **Current Events** | [Web Search](web-search-image-generation/) | Accurate, up-to-date information |
-| **Professional Posts** | [Enhanced](enhanced-prompt-image-generation/) | Publication-quality infographics |
-| **Quick Mockups** | [Basic](basic-text-to-image/) | Fast iterations |
-| **Tech Diagrams** | [Enhanced](enhanced-prompt-image-generation/) | Smart style selection |
-| **Data Visualization** | [Web Search](web-search-image-generation/) | Real statistics |
+| **Testing/Learning** | [Basic](image-generation/basic-text-to-image/) | Simple setup, immediate results |
+| **Current Events** | [Web Search](image-generation/web-search-image-generation/) | Accurate, up-to-date information |
+| **Professional Posts** | [Enhanced](image-generation/enhanced-prompt-image-generation/) | Publication-quality infographics |
+| **Quick Mockups** | [Basic](image-generation/basic-text-to-image/) | Fast iterations |
+| **Tech Diagrams** | [Enhanced](image-generation/enhanced-prompt-image-generation/) | Smart style selection |
+| **Data Visualization** | [Web Search](image-generation/web-search-image-generation/) | Real statistics |
 
 ### Workflow Comparison Table:
 
@@ -113,17 +113,17 @@ Additional for Web Search & Enhanced:
 
 ### Quick Start Path
 
-1. **Start Simple**: Try [Basic Text-to-Image](basic-text-to-image/) first
+1. **Start Simple**: Try [Basic Text-to-Image](image-generation/basic-text-to-image/) first
    - Import workflow
    - Add Gemini API key
    - Generate your first image
 
-2. **Add Research**: Upgrade to [Web Search](web-search-image-generation/)
+2. **Add Research**: Upgrade to [Web Search](image-generation/web-search-image-generation/)
    - Get Firecrawl API key
    - Import workflow
    - Generate research-based images
 
-3. **Go Professional**: Move to [Enhanced](enhanced-prompt-image-generation/)
+3. **Go Professional**: Move to [Enhanced](image-generation/enhanced-prompt-image-generation/)
    - Same APIs as Web Search
    - Import advanced workflow
    - Let AI optimize your prompts
@@ -242,19 +242,19 @@ After importing a workflow:
 ## 🎓 Learning Path
 
 ### Beginner
-1. Read [Basic workflow README](basic-text-to-image/README.md)
+1. Read [Basic workflow README](image-generation/basic-text-to-image/README.md)
 2. Import and run Basic workflow
 3. Experiment with different prompts
 4. Learn prompt engineering basics
 
 ### Intermediate
-1. Try [Web Search workflow](web-search-image-generation/README.md)
+1. Try [Web Search workflow](image-generation/web-search-image-generation/README.md)
 2. Understand web research integration
 3. See how context improves images
 4. Customize prompt templates
 
 ### Advanced
-1. Study [Enhanced workflow](enhanced-prompt-image-generation/README.md)
+1. Study [Enhanced workflow](image-generation/enhanced-prompt-image-generation/README.md)
 2. Analyze AI prompt engineer system message
 3. Understand style selection logic
 4. Modify for your specific use cases

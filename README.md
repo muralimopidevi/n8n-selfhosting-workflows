@@ -43,14 +43,14 @@ Automated AI-powered LinkedIn content creation pipeline featuring:
 
 👉 **[Explore LinkedIn Workflow →](n8n-workflows/linkedin-post-content-generator/README.md)**
 
-#### [Image Generation with Gemini](n8n-workflows/) (3 Workflows)
+#### [Image Generation with Gemini](n8n-workflows/image-generation/) (3 Workflows)
 Professional infographic creation using Google Gemini:
 
-**[Basic Text-to-Image](n8n-workflows/basic-text-to-image/)** - Simple prompt → image (perfect for beginners)
+**[Basic Text-to-Image](n8n-workflows/image-generation/basic-text-to-image/)** - Simple prompt → image (perfect for beginners)
 
-**[Web Search + Image](n8n-workflows/web-search-image-generation/)** - Research → enriched prompt → contextual image
+**[Web Search + Image](n8n-workflows/image-generation/web-search-image-generation/)** - Research → enriched prompt → contextual image
 
-**[Enhanced Prompt Engineering](n8n-workflows/enhanced-prompt-image-generation/)** - AI analyzes content → auto-selects style → professional infographic (production-ready)
+**[Enhanced Prompt Engineering](n8n-workflows/image-generation/enhanced-prompt-image-generation/)** - AI analyzes content → auto-selects style → professional infographic (production-ready)
 
 👉 **[View All Image Workflows →](n8n-workflows/README.md)**
 
@@ -111,14 +111,24 @@ n8n-selfhosting-workflows/
 │       └── README.md            # Complete setup documentation (794 lines)
 │
 ├── 📁 n8n-workflows/            # Community automation workflows
-│   └── linkedin-post-content-generator/
-│       ├── linkedin_post_content_generator.json   # n8n workflow
-│       ├── linkedin_post_pipeline.xlsx            # Sample Google Sheet template
-│       └── README.md            # Workflow documentation (850+ lines)
-│
-├── 📁 info/                     # Project documentation
-│   ├── IMPLEMENTATION_PLAN.md   # Development roadmap
-│   └── TODO.md                  # Task tracking
+│   │
+│   ├── image-generation/        # Image generation workflows (3 workflows)
+│   │   ├── basic-text-to-image/
+│   │   │   ├── basic_text_to_image.json
+│   │   │   └── README.md
+│   │   ├── web-search-image-generation/
+│   │   │   ├── web_search_image_generation.json
+│   │   │   └── README.md
+│   │   └── enhanced-prompt-image-generation/
+│   │       ├── Image_generation_gemini.json
+│   │       └── README.md
+│   │
+│   ├── linkedin-post-content-generator/
+│   │   ├── linkedin_post_content_generator.json   # n8n workflow
+│   │   ├── linkedin_post_pipeline.xlsx            # Sample Google Sheet template
+│   │   └── README.md            # Workflow documentation (850+ lines)
+│   │
+│   └── README.md                # Workflows overview and comparison
 │
 ├── LICENSE
 └── README.md                    # This file
