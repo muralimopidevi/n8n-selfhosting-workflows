@@ -104,35 +104,19 @@ cat README.md
 n8n-selfhosting-workflows/
 │
 ├── 📁 n8n-selfhosting/          # Docker deployment infrastructure
-│   └── docker/
-│       ├── docker-compose.yml   # Production Docker Compose config
-│       ├── .env-example         # Environment variables template
-│       ├── .gitignore           # Git exclusions
-│       └── README.md            # Complete setup documentation (794 lines)
+│   └── docker/                  # Production-ready Docker Compose setup
+│       └── README.md            # Complete installation guide (794 lines)
 │
 ├── 📁 n8n-workflows/            # Community automation workflows
-│   │
 │   ├── image-generation/        # Image generation workflows (3 workflows)
-│   │   ├── basic-text-to-image/
-│   │   │   ├── basic_text_to_image.json
-│   │   │   └── README.md
-│   │   ├── web-search-image-generation/
-│   │   │   ├── web_search_image_generation.json
-│   │   │   └── README.md
-│   │   └── enhanced-prompt-image-generation/
-│   │       ├── Image_generation_gemini.json
-│   │       └── README.md
-│   │
-│   ├── linkedin-post-content-generator/
-│   │   ├── linkedin_post_content_generator.json   # n8n workflow
-│   │   ├── linkedin_post_pipeline.xlsx            # Sample Google Sheet template
-│   │   └── README.md            # Workflow documentation (850+ lines)
-│   │
+│   ├── linkedin-post-content-generator/  # LinkedIn content automation
 │   └── README.md                # Workflows overview and comparison
 │
 ├── LICENSE
 └── README.md                    # This file
 ```
+
+> 💡 **Note**: Each workflow folder contains its own JSON file, documentation, and setup guides. Browse [n8n-workflows/](n8n-workflows/) to explore all available workflows.
 
 ---
 
