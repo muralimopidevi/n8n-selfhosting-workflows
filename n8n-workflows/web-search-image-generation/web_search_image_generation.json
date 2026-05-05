@@ -1,0 +1,174 @@
+{
+  "name": "Web Search + Image Generation",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "b2c3d4e5-0002-0002-0002-000000000001",
+      "name": "manual_trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        400,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ==============================================================\n// WEB SEARCH + IMAGE GENERATION INPUT\n// Edit TOPIC and DESCRIPTION to search and generate images\n// ==============================================================\n\nconst TOPIC = 'The future of remote work and hybrid teams';\n\nconst DESCRIPTION = `Explore how companies are adapting to permanent hybrid work models, \nincluding new tools for async collaboration, virtual office spaces, and \nwork-life balance strategies for distributed teams in 2026.`;\n\nreturn [{ json: { topic: TOPIC, description: DESCRIPTION } }];"
+      },
+      "id": "b2c3d4e5-0002-0002-0002-000000000002",
+      "name": "set_search_topic",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        600,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "MapSearch",
+        "operation": "search",
+        "query": "={{ $json.topic + ' ' + $json.description + ' visual infographic 2026' }}",
+        "limit": 6,
+        "requestOptions": {}
+      },
+      "id": "b2c3d4e5-0002-0002-0002-000000000003",
+      "name": "firecrawl_search",
+      "type": "@mendable/n8n-nodes-firecrawl.firecrawl",
+      "typeVersion": 1,
+      "position": [
+        800,
+        500
+      ],
+      "credentials": {
+        "firecrawlApi": {
+          "id": "YOUR_FIRECRAWL_API_CREDENTIAL_ID",
+          "name": "Firecrawl API"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Combine topic, description, and web search results into a detailed image prompt\n\nconst inputs = $('set_search_topic').first().json;\nconst topic = inputs.topic;\nconst description = inputs.description;\n\n// Collect web search results\nlet researchContext = '';\ntry {\n  const results = $input.all()\n    .filter(r => r.json && r.json.title)\n    .slice(0, 6)\n    .map((r, idx) => `${idx + 1}. ${r.json.title}: ${(r.json.description || '').substring(0, 120)}`);\n  \n  if (results.length > 0) {\n    researchContext = results.join('\\n');\n  }\n} catch(e) {\n  console.log('Web search error:', e.message);\n}\n\n// Build a comprehensive image generation prompt\nconst imagePrompt = `Create a professional, editorial-quality infographic illustration for LinkedIn about: ${topic}\n\nContext: ${description}\n\nVisual Requirements:\n- Professional B2B style suitable for LinkedIn\n- Modern, clean design with a cohesive color palette\n- 1440x756px landscape format\n- Include 3-5 key visual elements representing main concepts\n- Use clear labels and readable text (max 5 words per label)\n- Incorporate modern design trends: gradient backgrounds, 3D elements, or isometric style\n- NOT a flat 2D flowchart - make it visually engaging\n\nResearch Context (use for accuracy and current trends):\n${researchContext || '(No web research available - use general knowledge)'}\n\nStyle: Ultra-detailed editorial illustration, crisp rendering, professional quality, modern color scheme (suggest blues, purples, or greens), appropriate for business social media.`;\n\nreturn [{ json: { prompt: imagePrompt, topic, description } }];"
+      },
+      "id": "b2c3d4e5-0002-0002-0002-000000000004",
+      "name": "build_prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3-pro-image-preview",
+          "mode": "list",
+          "cachedResultName": "models/gemini-3-pro-image-preview"
+        },
+        "prompt": "={{ $json.prompt }}",
+        "options": {}
+      },
+      "id": "b2c3d4e5-0002-0002-0002-000000000005",
+      "name": "generate_image",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        500
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "YOUR_GOOGLE_GEMINI_CREDENTIAL_ID",
+          "name": "Google Gemini API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Decode Gemini image output and save with topic-based filename\nconst ts = new Date().toISOString().replace(/[:.]/g, '-').substring(0, 19);\nconst topicLabel = ($('set_search_topic').first().json.topic || 'search_image')\n  .toLowerCase().replace(/[^a-z0-9]+/g, '_').substring(0, 40);\nconst filename = topicLabel + '_' + ts;\n\nconst nativeBinary = $input.first().binary?.data;\nlet imageBuffer, mimeType;\n\nif (nativeBinary) {\n  mimeType = nativeBinary.mimeType || 'image/jpeg';\n  imageBuffer = await this.helpers.getBinaryDataBuffer(0, 'data');\n} else {\n  const response = $input.first().json;\n  const parts = response.candidates?.[0]?.content?.parts || [];\n  const imgPart = parts.find(p => p.inlineData && (p.inlineData.mimeType || '').startsWith('image/'));\n  \n  if (!imgPart) {\n    const txt = parts.filter(p => p.text).map(p => p.text).join('\\n');\n    throw new Error('No image in response. Model output: ' + txt.substring(0, 500));\n  }\n  \n  mimeType = imgPart.inlineData.mimeType || 'image/jpeg';\n  imageBuffer = Buffer.from(imgPart.inlineData.data, 'base64');\n}\n\nconst ext = mimeType.includes('jpeg') ? 'jpg' : 'png';\nconst finalFilename = filename + '.' + ext;\nconst imageBinary = await this.helpers.prepareBinaryData(imageBuffer, finalFilename, mimeType);\n\nreturn [{ \n  json: { \n    filename: finalFilename, \n    mimeType, \n    size_bytes: imageBuffer.length,\n    generated_at: new Date().toISOString()\n  }, \n  binary: { image: imageBinary } \n}];"
+      },
+      "id": "b2c3d4e5-0002-0002-0002-000000000006",
+      "name": "decode_image",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1400,
+        500
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "manual_trigger": {
+      "main": [
+        [
+          {
+            "node": "set_search_topic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set_search_topic": {
+      "main": [
+        [
+          {
+            "node": "firecrawl_search",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "firecrawl_search": {
+      "main": [
+        [
+          {
+            "node": "build_prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "build_prompt": {
+      "main": [
+        [
+          {
+            "node": "generate_image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "generate_image": {
+      "main": [
+        [
+          {
+            "node": "decode_image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "00000000-0000-0000-0000-000000000002",
+  "meta": {
+    "instanceId": "your-n8n-instance-id"
+  },
+  "id": "WebSearchImageGen002",
+  "tags": []
+}

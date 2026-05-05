@@ -43,6 +43,17 @@ Automated AI-powered LinkedIn content creation pipeline featuring:
 
 👉 **[Explore LinkedIn Workflow →](n8n-workflows/linkedin-post-content-generator/README.md)**
 
+#### [Image Generation with Gemini](n8n-workflows/) (3 Workflows)
+Professional infographic creation using Google Gemini:
+
+**[Basic Text-to-Image](n8n-workflows/basic-text-to-image/)** - Simple prompt → image (perfect for beginners)
+
+**[Web Search + Image](n8n-workflows/web-search-image-generation/)** - Research → enriched prompt → contextual image
+
+**[Enhanced Prompt Engineering](n8n-workflows/enhanced-prompt-image-generation/)** - AI analyzes content → auto-selects style → professional infographic (production-ready)
+
+👉 **[View All Image Workflows →](n8n-workflows/README.md)**
+
 ---
 
 ## 🚀 Quick Start

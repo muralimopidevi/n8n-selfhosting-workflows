@@ -1,0 +1,115 @@
+{
+  "name": "Basic Text-to-Image with Gemini",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "a1b2c3d4-0001-0001-0001-000000000001",
+      "name": "manual_trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        400,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ==============================================================\n// SIMPLE TEXT-TO-IMAGE INPUT\n// Edit the PROMPT variable below to generate different images\n// ==============================================================\n\nconst PROMPT = `Create a professional LinkedIn-style infographic illustration showing the evolution of AI technology. \nUse a clean, modern design with a blue and white color scheme. \nShow three stages from left to right: Traditional AI (2015), Machine Learning Era (2020), and Generative AI (2025). \nInclude simple icons and connecting arrows between stages. \nMake it suitable for a professional business post. \n1440x756px landscape format.`;\n\nreturn [{ json: { prompt: PROMPT } }];"
+      },
+      "id": "a1b2c3d4-0001-0001-0001-000000000002",
+      "name": "set_prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        600,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3-pro-image-preview",
+          "mode": "list",
+          "cachedResultName": "models/gemini-3-pro-image-preview"
+        },
+        "prompt": "={{ $json.prompt }}",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0001-0001-0001-000000000003",
+      "name": "generate_image",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        800,
+        400
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "YOUR_GOOGLE_GEMINI_CREDENTIAL_ID",
+          "name": "Google Gemini API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Decode Gemini image output and save as binary file\nconst ts = new Date().toISOString().replace(/[:.]/g, '-').substring(0, 19);\nconst filename = 'gemini_image_' + ts;\n\nconst nativeBinary = $input.first().binary?.data;\nlet imageBuffer, mimeType;\n\nif (nativeBinary) {\n  // Native binary output\n  mimeType = nativeBinary.mimeType || 'image/jpeg';\n  imageBuffer = await this.helpers.getBinaryDataBuffer(0, 'data');\n} else {\n  // HTTP API response format\n  const response = $input.first().json;\n  const parts = response.candidates?.[0]?.content?.parts || [];\n  const imgPart = parts.find(p => p.inlineData && (p.inlineData.mimeType || '').startsWith('image/'));\n  \n  if (!imgPart) {\n    const txt = parts.filter(p => p.text).map(p => p.text).join('\\n');\n    throw new Error('No image in response. Model output: ' + txt.substring(0, 500));\n  }\n  \n  mimeType = imgPart.inlineData.mimeType || 'image/jpeg';\n  imageBuffer = Buffer.from(imgPart.inlineData.data, 'base64');\n}\n\nconst ext = mimeType.includes('jpeg') ? 'jpg' : 'png';\nconst finalFilename = filename + '.' + ext;\nconst imageBinary = await this.helpers.prepareBinaryData(imageBuffer, finalFilename, mimeType);\n\nreturn [{ \n  json: { \n    filename: finalFilename, \n    mimeType, \n    size_bytes: imageBuffer.length,\n    generated_at: new Date().toISOString()\n  }, \n  binary: { image: imageBinary } \n}];"
+      },
+      "id": "a1b2c3d4-0001-0001-0001-000000000004",
+      "name": "decode_image",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        400
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "manual_trigger": {
+      "main": [
+        [
+          {
+            "node": "set_prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set_prompt": {
+      "main": [
+        [
+          {
+            "node": "generate_image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "generate_image": {
+      "main": [
+        [
+          {
+            "node": "decode_image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "00000000-0000-0000-0000-000000000001",
+  "meta": {
+    "instanceId": "your-n8n-instance-id"
+  },
+  "id": "BasicTextToImage001",
+  "tags": []
+}

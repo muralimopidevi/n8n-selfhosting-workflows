@@ -1,0 +1,253 @@
+﻿{
+  "name": "Image Generation Gemini",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "4f479fab-020a-4aef-b850-bfad238a1c95",
+      "name": "manual_trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        1248,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ====================================================================\n// EDIT TOPIC + DESCRIPTION to test different infographics.\n// The AI prompt engineer will choose the best style and write the prompt.\n// ====================================================================\n\nconst TOPIC = 'Why open-source AI is becoming the default stack for builders';\n\nconst DESCRIPTION = `Talk about how teams can combine Hugging Face Transformers for pretrained models, Ollama for local model runs, and vLLM for scalable serving. This is a strong â€œbuilder mindsetâ€ post because it shows the shift from â€œusing AIâ€ to â€œshipping AI systems`;\n\nreturn [{ json: { topic: TOPIC, description: DESCRIPTION } }];"
+      },
+      "id": "def73a07-0614-485a-86fd-16e819056e87",
+      "name": "set_inputs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1488,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "MapSearch",
+        "operation": "search",
+        "query": "={{ $json.topic + ' ' + $json.description.substring(0, 120) + ' visual architecture illustration 2025 2026' }}",
+        "limit": 8,
+        "requestOptions": {}
+      },
+      "id": "f5665fa0-afe8-4334-a1f8-5c51d90ca716",
+      "name": "firecrawl_search",
+      "type": "@mendable/n8n-nodes-firecrawl.firecrawl",
+      "typeVersion": 1,
+      "position": [
+        1728,
+        528
+      ],
+      "credentials": {
+        "firecrawlApi": {
+          "id": "YOUR_FIRECRAWL_API_CREDENTIAL_ID", "name": "Firecrawl API"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Combines topic + description + Firecrawl web research into\n// the image_prompt_request text that the AI prompt engineer agent reads.\n\nconst inputs = $('set_inputs').first().json;\nconst topic = inputs.topic;\nconst description = inputs.description;\n\n// Count steps/elements to help agent pick style\nconst stepCount = (description.match(/\\b(step|stage|phase|layer|part)\\s+\\d|\\d+\\s+(step|stage|phase|layer|part)|\\bfirst\\b|\\bsecond\\b|\\bthird\\b|\\bfourth\\b|\\bfifth\\b/gi) || []).length;\nconst hasComparison = /\\bvs\\b|\\bversus\\b|\\bcompare|before.+after|old.+new|traditional.+modern/i.test(description);\nconst hasStats = /\\b\\d+[\\.,]\\d+|\\b\\d+[%x]\\b|\\bmillion\\b|\\bbillion\\b|\\bfaster\\b|\\bmore\\b/i.test(description);\nconst namedTools = (description.match(/\\b[A-Z][a-zA-Z]+(?:AI|ML|LLM|DB|GPT|API)?\\b/g) || [])\n  .filter(w => w.length > 3).slice(0, 8);\n\n// Collect web search snippets\nlet researchSnippets = '';\ntry {\n  const lines = $input.all()\n    .filter(r => r.json && r.json.title)\n    .slice(0, 8)\n    .map(r => `- ${r.json.title}: ${(r.json.description || '').substring(0, 150)}`);\n  if (lines.length > 0) researchSnippets = lines.join('\\n');\n} catch(e) {}\n\n// Hint to guide style selection\nlet styleHint = '';\nif (hasComparison) styleHint = 'Content appears to compare two things â€” consider COMPARISON style [B].';\nelse if (hasStats) styleHint = 'Content has statistics/benchmarks â€” consider BOLD STAT POSTER style [F].';\nelse if (stepCount === 0 && namedTools.length > 4) styleHint = 'Multiple tools in an ecosystem â€” consider HUB-AND-SPOKE style [C].';\nelse if (stepCount >= 2 && stepCount <= 5) styleHint = `Content has ~${stepCount} steps â€” ISOMETRIC style [A] may fit, but verify it is truly sequential.`;\nelse styleHint = 'No clear pipeline structure â€” consider EDITORIAL SCENE [E] or HUB-AND-SPOKE [C].';\n\nconst request = `TOPIC: ${topic}\n\nDESCRIPTION:\n${description}\n\nNAMED TOOLS/COMPANIES DETECTED: ${namedTools.join(', ') || '(none detected â€” scan description yourself)'}\nCONTENT STRUCTURE HINT: ${styleHint}\n\nWEB RESEARCH (use for visual accuracy â€” real tool names, logos, architectures):\n${researchSnippets || '(no research available)'}\n\n---\nTASK: Write ONE detailed Gemini image generation prompt for this topic.\nFollow your system message â€” analyse content structure first, choose the best style [Aâ€“F], then write a rich scene description.\nThe prompt must be at least 200 words and describe every visual element specifically.\nThe Prompt shloud generate the professional Image standards of Linkedin.\n\nOutput ONLY inside these markers:\n\n===IMAGE_PROMPT_V1_START===\n[your prompt here]\n===IMAGE_PROMPT_V1_END===`;\n\nreturn [{ json: { image_prompt_request: request, topic, description } }];"
+      },
+      "id": "34ccde96-4c50-4f0c-9ecf-a2a24d2f1abb",
+      "name": "prepare_request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1968,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.image_prompt_request }}",
+        "options": {
+          "systemMessage": "You are a world-class editorial illustrator and creative director for LinkedIn B2B tech content.\nYour job: read a TOPIC + DESCRIPTION, analyse the content structure, and write one hyper-detailed Gemini image generation prompt that produces a professional, editorial-quality infographic.\n\nâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•\nSTEP 1 â€” ANALYSE THE CONTENT\nâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•\nBefore choosing a style, answer these questions in your head:\n1. How many distinct elements/steps/concepts are there? (count them explicitly)\n2. Is this a PROCESS (Aâ†’Bâ†’C), a COMPARISON (X vs Y), a HIERARCHY (layers), a SINGLE BIG IDEA, or a DATA STORY (numbers/stats)?\n3. What named tools, companies, or technologies are mentioned? What do they look like visually?\n4. What is the emotional/strategic tone? (disruptive, cautionary, empowering, technical deep-dive?)\n5. What does the web research reveal about how this topic is visually represented?\n\nâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•\nSTEP 2 â€” CHOOSE THE RIGHT STYLE\nâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•\nMatch content structure to style. DO NOT default to isometric 3-stage â€” that only fits 3-step pipelines.\n\n[A] ISOMETRIC SCENE â€” ONLY for topics that are genuinely 2â€“5 step sequential pipelines or architectures\n- Use ONLY when there are 2â€“5 clearly named sequential steps with distinct tools\n- Platforms: one per step, NO MORE than the actual step count\n- Each platform: 3D physical objects representing the tool (NOT generic boxes)\n  e.g. Pinecone = glowing hexagonal lattice; LLM = glass neural-sphere; vLLM = GPU rack with speed-lines\n- Dark navy background (#0A1628), neon data streams between platforms (cyan or green)\n- Bold white STEP N label on each platform, tool name in large bold white text\n- Full-width title bar top, accent footer bar bottom\n- 1200Ã—628px landscape OR 1080Ã—1080px square depending on platform count\n\n[B] COMPARISON ILLUSTRATION â€” for 'old vs new', 'X vs Y', 'proprietary vs open', 'before/after' topics\n- Two visual zones split by a bold vertical divider\n- LEFT: desaturated grey, locked padlock, constrained cage motif, stacked identical boxes\n- RIGHT: vibrant accent colour, open flowing network, forward motion, branching paths\n- Each zone: bold header label, 2â€“3 illustrated icons with 1-line labels, zone summary at bottom\n- Footer: bold italic one-sentence takeaway spanning full width\n- Background: light grey gradient or white, zone colour tints for contrast\n- 1440Ã—756px landscape\n\n[C] HUB-AND-SPOKE / ECOSYSTEM MAP â€” for 'X is the centre of everything' or multi-tool ecosystem topics\n- Central 3D object (the hub concept) in the middle, radiating to 5â€“8 orbiting illustrated tool icons\n- Neon glow lines from hub to each spoke, each spoke has a bold label and 1-line description\n- Background: deep dark gradient, the hub emitting ambient light\n- Arrangement: use clock positions (12, 2, 4, 6, 8, 10 o'clock) for spoke placement\n- 1080Ã—1080px square\n\n[D] TIMELINE / EVOLUTION â€” for 'how X evolved', 'era comparison', 'pastâ†’presentâ†’future' topics\n- Horizontal timeline ribbon across the centre, 3â€“5 era markers\n- Each era: illustrated scene segment above/below the ribbon, bold year/era label\n- Left side: old/simple/limited (grey tones); Right side: new/powerful (vivid accent)\n- Background: dark gradient, timeline ribbon glowing\n- 1440Ã—756px landscape\n\n[E] EDITORIAL SCENE â€” for strategy, role, mindset, leadership, complex system topics\n- ONE cohesive illustrated narrative scene â€” like a Wired or HBR magazine cover\n- A focal subject (person, system, key metaphor) occupies 40% of the image\n- 4â€“6 labelled illustrated elements placed contextually around the scene (not floating boxes)\n- Text labels are PART OF THE SCENE (on screens, signs, holographic overlays, NOT separate boxes)\n- Rich environmental storytelling: glowing dashboards, blueprint tables, deployment pipelines in background\n- 2â€“3 colour palette only, cinematic lighting\n- 1440Ã—756px or 1080Ã—1080px\n\n[F] BOLD STAT POSTER â€” for benchmark results, dramatic statistics, surprising numbers\n- HERO: the key number/claim in massive display typography, 40% of image area\n- Supporting context: 2â€“3 secondary data points in smaller clean text\n- Background: atmospheric illustrated scene â€” not competing, purely mood-setting\n- Strong typographic hierarchy, McKinsey/a16z report cover quality\n- One accent colour, dark or light background\n- 1080Ã—1080px square\n\nâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•\nSTEP 3 â€” WRITE THE GEMINI PROMPT\nâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•\nDescribe the scene like a director briefing a 3D artist. Be specific about:\n\n1. FORMAT & DIMENSIONS: exact pixel size and shape\n2. BACKGROUND: exact colour or gradient with hex codes\n3. LAYOUT STRUCTURE: precise placement of every major element (use positions: top, centre, left-third, bottom-right quadrant, etc.)\n4. EVERY OBJECT: what it is, its exact position, what it looks like physically, its colour and texture\n   GOOD: 'a glowing hexagonal lattice structure, cyan (#00D4FF), positioned on the left platform, emitting soft upward light, labelled PINECONE in bold white above it'\n   BAD: 'icons representing the database'\n5. DATA FLOWS / CONNECTIONS: exact colour, style (curved/straight/particle), direction, what connects to what\n6. ALL TEXT LABELS: exact wording, position, font weight hint, colour â€” max 5 words each\n7. LIGHTING: 'neon rim lighting from below', 'ambient volumetric glow', 'cinematic dramatic'\n8. STYLE KEYWORDS: 'ultra-detailed editorial illustration', 'professional B2B', 'sharp crisp rendering', 'NOT a flowchart'\n\nQUALITY CHECKLIST â€” your prompt MUST include:\n- Named tools/companies from the topic as LABELLED illustrated elements (never 'Tool A')\n- At least 3 distinct physical objects (not abstract shapes)\n- Specific hex colours for background and at least 2 accent elements\n- At least one data-flow or connection visual\n- Exact pixel dimensions\n- The word 'NOT a flat 2D flowchart' somewhere in the prompt\n\nâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•\nCRITICAL RULES\nâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•\n- NEVER default to 3-stage isometric unless the content is literally a 3-step sequential process\n- ALL text in the image: correctly spelled English, max 5 words per label, horizontal text only\n- NO hex codes drawn as visible text, NO watermarks, NO lorem ipsum\n- The style choice MUST be justified by the content structure you identified in Step 1\n\nâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•\nOUTPUT FORMAT\nâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•\n===IMAGE_PROMPT_V1_START===\n[Your complete Gemini image prompt here â€” minimum 200 words, describe every element]\n===IMAGE_PROMPT_V1_END==="
+        }
+      },
+      "id": "371d4daa-f31c-4ec9-8c67-e061e8352a8a",
+      "name": "prompt_engineer",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        2176,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "44c6d7eb-c63f-4d29-8485-2f6ad94e7e4a",
+      "name": "gemini_text_lm",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        2176,
+        768
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "YOUR_GOOGLE_GEMINI_CREDENTIAL_ID", "name": "Google Gemini API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse ===IMAGE_PROMPT_V1_START=== ... ===IMAGE_PROMPT_V1_END=== from agent output.\n// Falls back to full output if markers are missing.\n\nconst agentOutput = $input.first().json.output || $input.first().json.text || '';\n\nconst v1Match = agentOutput.match(/===IMAGE_PROMPT_V1_START===([\\s\\S]*?)===IMAGE_PROMPT_V1_END===/);\n\nlet prompt;\nif (v1Match) {\n  prompt = v1Match[1].trim();\n  console.log('[extract_prompt] Extracted prompt, length:', prompt.length);\n} else {\n  prompt = agentOutput.trim();\n  console.log('[extract_prompt] No markers â€” using full output, length:', prompt.length);\n}\n\nif (!prompt || prompt.length < 50) {\n  throw new Error('Prompt too short or empty. Agent output: ' + agentOutput.substring(0, 500));\n}\n\nreturn [{ json: { prompt } }];"
+      },
+      "id": "7b4bb011-7511-4136-bdf3-1bcbe14e9980",
+      "name": "extract_prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2448,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3-pro-image-preview",
+          "mode": "list",
+          "cachedResultName": "models/gemini-3-pro-image-preview (Nano Banana Pro)"
+        },
+        "prompt": "={{ $json.prompt }}",
+        "options": {}
+      },
+      "id": "acfc6539-7734-4d9b-9c3b-0cf8aa60cf41",
+      "name": "generate_image",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        2688,
+        528
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "YOUR_GOOGLE_GEMINI_CREDENTIAL_ID", "name": "Google Gemini API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Decode Gemini image output â€” handles both native binary and HTTP API fallback.\nconst ts = new Date().toISOString().replace(/[:.]/g, '-').substring(0, 19);\nconst label = ($('set_inputs').first().json.topic || 'test')\n  .toLowerCase().replace(/[^a-z0-9]+/g, '_').substring(0, 30);\n\nconst nativeBinary = $input.first().binary?.data;\nlet imageBuffer, mimeType;\n\nif (nativeBinary) {\n  mimeType = nativeBinary.mimeType || 'image/jpeg';\n  imageBuffer = await this.helpers.getBinaryDataBuffer(0, 'data');\n} else {\n  const response = $input.first().json;\n  const parts = response.candidates?.[0]?.content?.parts || [];\n  const imgPart = parts.find(p => p.inlineData && (p.inlineData.mimeType || '').startsWith('image/'));\n  if (!imgPart) {\n    const txt = parts.filter(p => p.text).map(p => p.text).join('\\n');\n    throw new Error('No image in response. Model text: ' + txt.substring(0, 500));\n  }\n  mimeType = imgPart.inlineData.mimeType || 'image/jpeg';\n  imageBuffer = Buffer.from(imgPart.inlineData.data, 'base64');\n}\n\nconst ext = mimeType.includes('jpeg') ? 'jpg' : 'png';\nconst filename = label + '_' + ts + '.' + ext;\nconst imageBinary = await this.helpers.prepareBinaryData(imageBuffer, filename, mimeType);\n\nreturn [{ json: { filename, mimeType, size_bytes: imageBuffer.length }, binary: { image: imageBinary } }];"
+      },
+      "id": "841fa117-dcd4-446a-8925-f8ff697ec01c",
+      "name": "decode_image",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2928,
+        528
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "manual_trigger": {
+      "main": [
+        [
+          {
+            "node": "set_inputs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set_inputs": {
+      "main": [
+        [
+          {
+            "node": "firecrawl_search",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "firecrawl_search": {
+      "main": [
+        [
+          {
+            "node": "prepare_request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "prepare_request": {
+      "main": [
+        [
+          {
+            "node": "prompt_engineer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "prompt_engineer": {
+      "main": [
+        [
+          {
+            "node": "extract_prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "extract_prompt": {
+      "main": [
+        [
+          {
+            "node": "generate_image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "generate_image": {
+      "main": [
+        [
+          {
+            "node": "decode_image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "gemini_text_lm": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "prompt_engineer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d2c1078e-b0a0-4189-a208-56b4de1b4da9",
+  "meta": {
+    "instanceId": "your-n8n-instance-id"
+  },
+  "id": "HUb5Ktk7xhh2RyDv",
+  "tags": []
+}
