@@ -45,7 +45,7 @@
       "name": "read_all_rows",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "TnBLLbGTiyN6TCUX",
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
           "name": "google_sheets_linkedin"
         }
       }
@@ -545,7 +545,7 @@
       "name": "update_stage_researching",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "TnBLLbGTiyN6TCUX",
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
           "name": "google_sheets_linkedin"
         }
       },
@@ -587,7 +587,7 @@
       "name": "firecrawl_search",
       "credentials": {
         "firecrawlApi": {
-          "id": "G7aF1uEYOF5NkYtB",
+          "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID_1",
           "name": "firecrawl_api"
         }
       },
@@ -657,7 +657,7 @@
       "name": "save_to_drive",
       "credentials": {
         "googleDriveOAuth2Api": {
-          "id": "YCQChHLGkxo9dgmK",
+          "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID_2",
           "name": "google_drive_linkedin"
         }
       },
@@ -756,7 +756,7 @@
       "name": "update_sheet_research_url",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "TnBLLbGTiyN6TCUX",
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
           "name": "google_sheets_linkedin"
         }
       },
@@ -823,7 +823,7 @@
       "name": "download_research",
       "credentials": {
         "googleDriveOAuth2Api": {
-          "id": "YCQChHLGkxo9dgmK",
+          "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID_2",
           "name": "google_drive_linkedin"
         }
       },
@@ -946,7 +946,7 @@
       "name": "save_draft_v1",
       "credentials": {
         "googleDriveOAuth2Api": {
-          "id": "YCQChHLGkxo9dgmK",
+          "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID_2",
           "name": "google_drive_linkedin"
         }
       },
@@ -991,7 +991,7 @@
       "name": "save_draft_v2",
       "credentials": {
         "googleDriveOAuth2Api": {
-          "id": "YCQChHLGkxo9dgmK",
+          "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID_2",
           "name": "google_drive_linkedin"
         }
       },
@@ -1113,7 +1113,7 @@
       "name": "update_sheet_drafted",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "TnBLLbGTiyN6TCUX",
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
           "name": "google_sheets_linkedin"
         }
       },
@@ -1156,7 +1156,7 @@
       "name": "create_post_folder",
       "credentials": {
         "googleDriveOAuth2Api": {
-          "id": "YCQChHLGkxo9dgmK",
+          "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID_2",
           "name": "google_drive_linkedin"
         }
       },
@@ -1269,7 +1269,7 @@
       "name": "update_sheet_error",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "TnBLLbGTiyN6TCUX",
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
           "name": "google_sheets_linkedin"
         }
       },
@@ -1344,7 +1344,7 @@
       "name": "update_stage_content_gen",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "TnBLLbGTiyN6TCUX",
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
           "name": "google_sheets_linkedin"
         }
       },
@@ -1547,7 +1547,7 @@
       "name": "delete_old_folder",
       "credentials": {
         "googleDriveOAuth2Api": {
-          "id": "YCQChHLGkxo9dgmK",
+          "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID_2",
           "name": "google_drive_linkedin"
         }
       },
@@ -1601,7 +1601,7 @@
       "name": "download_content_v1",
       "credentials": {
         "googleDriveOAuth2Api": {
-          "id": "YCQChHLGkxo9dgmK",
+          "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID_2",
           "name": "google_drive_linkedin"
         }
       },
@@ -1642,7 +1642,7 @@
       "name": "download_content_v2",
       "credentials": {
         "googleDriveOAuth2Api": {
-          "id": "YCQChHLGkxo9dgmK",
+          "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID_2",
           "name": "google_drive_linkedin"
         }
       },
@@ -1779,7 +1779,7 @@
       "name": "update_stage_imaging",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "TnBLLbGTiyN6TCUX",
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
           "name": "google_sheets_linkedin"
         }
       },
@@ -1831,7 +1831,7 @@
       ],
       "credentials": {
         "googlePalmApi": {
-          "id": "mk2tcvQ8pKuyIvc8",
+          "id": "YOUR_FIRECRAWL_API_CREDENTIAL_ID",
           "name": "Google Gemini(PaLM) Api account"
         }
       },
@@ -1877,7 +1877,7 @@
       "name": "save_image_v1",
       "credentials": {
         "googleDriveOAuth2Api": {
-          "id": "YCQChHLGkxo9dgmK",
+          "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID_2",
           "name": "google_drive_linkedin"
         }
       },
@@ -1915,7 +1915,7 @@
       ],
       "credentials": {
         "googlePalmApi": {
-          "id": "mk2tcvQ8pKuyIvc8",
+          "id": "YOUR_FIRECRAWL_API_CREDENTIAL_ID",
           "name": "Google Gemini(PaLM) Api account"
         }
       },
@@ -1961,7 +1961,7 @@
       "name": "save_image_v2",
       "credentials": {
         "googleDriveOAuth2Api": {
-          "id": "YCQChHLGkxo9dgmK",
+          "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID_2",
           "name": "google_drive_linkedin"
         }
       },
@@ -2084,7 +2084,7 @@
       "name": "update_sheet_imaged",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "TnBLLbGTiyN6TCUX",
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
           "name": "google_sheets_linkedin"
         }
       },
@@ -2165,7 +2165,7 @@
       "webhookId": "5012c7c4-7496-4fd8-8a3d-270ca50a44a8",
       "credentials": {
         "gmailOAuth2": {
-          "id": "2vNSpZOm0ukFoTE1",
+          "id": "YOUR_GMAIL_OAUTH2_CREDENTIAL_ID",
           "name": "gmail_linkedin"
         }
       },
@@ -2264,7 +2264,7 @@
       "name": "update_sheet_review_sent",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "TnBLLbGTiyN6TCUX",
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
           "name": "google_sheets_linkedin"
         }
       },
@@ -2541,7 +2541,7 @@
       "name": "increment_rewrite_count",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "TnBLLbGTiyN6TCUX",
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
           "name": "google_sheets_linkedin"
         }
       },
@@ -2709,7 +2709,7 @@
       "name": "reset_to_rethinking",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "TnBLLbGTiyN6TCUX",
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
           "name": "google_sheets_linkedin"
         }
       },
@@ -2834,7 +2834,7 @@
       "name": "update_sheet_approved",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "TnBLLbGTiyN6TCUX",
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
           "name": "google_sheets_linkedin"
         }
       },
@@ -2969,7 +2969,7 @@
       "name": "reset_to_drafted",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "TnBLLbGTiyN6TCUX",
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
           "name": "google_sheets_linkedin"
         }
       },
@@ -3056,7 +3056,7 @@
       "name": "update_sheet_stopped",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "TnBLLbGTiyN6TCUX",
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
           "name": "google_sheets_linkedin"
         }
       },
@@ -3209,7 +3209,7 @@
       "name": "update_sheet_webhook",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "TnBLLbGTiyN6TCUX",
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
           "name": "google_sheets_linkedin"
         }
       },
@@ -3407,7 +3407,7 @@
       "name": "update_sheet_rethink_reset",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "TnBLLbGTiyN6TCUX",
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
           "name": "google_sheets_linkedin"
         }
       },
@@ -3437,7 +3437,7 @@
       "name": "/search in Firecrawl",
       "credentials": {
         "firecrawlApi": {
-          "id": "G7aF1uEYOF5NkYtB",
+          "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID_1",
           "name": "firecrawl_api"
         }
       }
@@ -3466,7 +3466,7 @@
       "name": "/search in Firecrawl1",
       "credentials": {
         "firecrawlApi": {
-          "id": "G7aF1uEYOF5NkYtB",
+          "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID_1",
           "name": "firecrawl_api"
         }
       }
@@ -3495,7 +3495,7 @@
       "name": "/search in Firecrawl2",
       "credentials": {
         "firecrawlApi": {
-          "id": "G7aF1uEYOF5NkYtB",
+          "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID_1",
           "name": "firecrawl_api"
         }
       }
@@ -3522,7 +3522,7 @@
       "name": "firecrawl_search1",
       "credentials": {
         "firecrawlApi": {
-          "id": "G7aF1uEYOF5NkYtB",
+          "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID_1",
           "name": "firecrawl_api"
         }
       },
@@ -3543,7 +3543,7 @@
       "name": "Azure OpenAI Chat Model",
       "credentials": {
         "azureOpenAiApi": {
-          "id": "L7xnZzV7zXqRoYQm",
+          "id": "YOUR_LLM_API_CREDENTIAL_ID",
           "name": "Azure gpt-5.3-chat"
         }
       }
@@ -3563,7 +3563,7 @@
       "name": "Azure OpenAI Chat Model1",
       "credentials": {
         "azureOpenAiApi": {
-          "id": "L7xnZzV7zXqRoYQm",
+          "id": "YOUR_LLM_API_CREDENTIAL_ID",
           "name": "Azure gpt-5.3-chat"
         }
       }
@@ -3583,7 +3583,7 @@
       "name": "Azure OpenAI Chat Model2",
       "credentials": {
         "azureOpenAiApi": {
-          "id": "L7xnZzV7zXqRoYQm",
+          "id": "YOUR_LLM_API_CREDENTIAL_ID",
           "name": "Azure gpt-5.3-chat"
         }
       }
@@ -3603,7 +3603,7 @@
       "name": "Azure OpenAI Chat Model3",
       "credentials": {
         "azureOpenAiApi": {
-          "id": "L7xnZzV7zXqRoYQm",
+          "id": "YOUR_LLM_API_CREDENTIAL_ID",
           "name": "Azure gpt-5.3-chat"
         }
       }
@@ -5181,16 +5181,17 @@
   },
   "versionId": "ca81171f-5779-4e74-ab1e-a63521ee1e5d",
   "meta": {
-    "instanceId": "3d69b32144b99780480d08db2997c5c5378b8c9ad11110e14dae60b024894dae"
+    "instanceId": "your-n8n-instance-id"
   },
-  "id": "7X2g28TOJr2ktnW2",
+  "id": "your-workflow-id",
   "tags": [
     {
       "updatedAt": "2026-04-03T09:09:11.350Z",
       "createdAt": "2026-04-03T09:09:11.350Z",
-      "id": "LHk5cG7QmqpPIflc",
+      "id": "your-tag-id",
       "name": "Linkedin"
     }
   ]
 }
+
 
